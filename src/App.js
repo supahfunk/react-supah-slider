@@ -36,22 +36,11 @@ const App = () => {
   Render Slider
   ------------------------------*/
   const renderSlider = () => {
-    const slides = items.map((item, index) => (
-      <div
-        className="slide"
-        key={index.toString()}
-      >
-        <img src={item.image} alt={item.title} />
-        <h2>{item.title}</h2>
-      </div>
-    ))
     return (
-      <div className="slider">
-        <Slider
-          className="slider"
-          items={slides}
-        />
-      </div>
+      <Slider
+        className="slider"
+        items={items}
+      />
     )
   }
   return (
