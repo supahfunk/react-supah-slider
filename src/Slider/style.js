@@ -22,10 +22,12 @@ const style = () => {
     Slide
     ------------------------------*/
     slide: {
+      width: '30vw',
+      height: 300,
+      margin: 20,
       '& button': {
-        width: 300,
-        height: 300,
-        margin: 20,
+        width: '100%',
+        height: '100%',
         padding: 0,
         border: 'none',
         background: 'none',
@@ -75,6 +77,16 @@ const style = () => {
         transformOrigin: '0 0',
         transform: 'scaleX(var(--progress))',
       },
+    },
+  }
+
+  /*------------------------------
+  SM
+  ------------------------------*/
+  output['@media (max-width: 768px)'] = {
+    slide: {
+      width: '50vw',
+      height: 300,
     },
   }
 
