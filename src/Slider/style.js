@@ -3,6 +3,9 @@ const style = () => {
     root: {
       position: 'relative',
       zIndex: 1,
+      overflow: 'hidden',
+      touchAction: 'none',
+      paddingBottom: 20,
       '& *': {
         cursor: 'grab',
         userSelect: 'none',
@@ -25,6 +28,8 @@ const style = () => {
       width: '30vw',
       height: 300,
       margin: 20,
+      '--skew': 'calc(var(--speed) * .01deg)',
+      transform: 'skewX(var(--skew))',
       '& button': {
         width: '100%',
         height: '100%',
@@ -60,10 +65,9 @@ const style = () => {
     progress: {
       position: 'absolute',
       zIndex: 1,
-      bottom: -20,
+      bottom: 0,
       left: 20,
-      right: 20,
-      margin: '0 auto',
+      width: 'calc(100vw - 40px)',
       height: 2,
       background: 'rgba(0, 0, 0, .1)',
       '&:before': {

@@ -1,5 +1,3 @@
-/* eslint-disable prefer-destructuring */
-/* eslint-disable react/jsx-props-no-spreading */
 import { useEffect, useRef, useState } from 'react'
 import classNames from 'classnames'
 import { createUseStyles } from 'react-jss'
@@ -19,7 +17,7 @@ const Slider = ({
   const $root = useRef()
   const $slider = useRef()
   const viewport = useRef(0)
-  const range = useRef(0)
+  const maxDistance = useRef(0)
   const x = useRef(0)
   const actualX = useRef(0)
   const newX = useRef(0)
@@ -46,7 +44,7 @@ const Slider = ({
   ------------------------------*/
   const handleResize = () => {
     viewport.current = $root.current.getBoundingClientRect().width
-    range.current = $slider.current.getBoundingClientRect().width - viewport.current
+    maxDistance.current = $slider.current.getBoundingClientRect().width - viewport.current
   }
 
   /*------------------------------
@@ -65,12 +63,14 @@ const Slider = ({
   RAF
   ------------------------------*/
   useRaf(() => {
-    const lerpX = clamp(actualX.current - x.current * soap, -range.current, 0)
+    const lerpX = clamp(actualX.current - x.current * soap, -maxDistance.current, 0)
     newX.current = lerp(newX.current, lerpX, 0.08)
     speed.current = (newX.current - lerpX).toFixed(2)
-    progress.current = (-newX.current / range.current).toFixed(3)
+    progress.current = (-newX.current / maxDistance.current).toFixed(3)
 
     $slider.current.style.transform = `translateX(${newX.current}px)`
+
+    // CSS Vars
     $root.current.style.setProperty('--speed', speed.current)
     $root.current.style.setProperty('--speed-abs', Math.abs(speed.current))
     $root.current.style.setProperty('--progress', progress.current)
@@ -85,7 +85,9 @@ const Slider = ({
         className={classes.slide}
         key={index.toString()}
       >
-        <button>
+        <button
+          onClick={() => { if (!isDragging) window.console.log('slide:', index) }}
+        >
           <img src={item.image} alt={item.title} />
           <h2>{item.title}</h2>
         </button>

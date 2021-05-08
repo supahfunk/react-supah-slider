@@ -23,6 +23,8 @@
     "react/no-access-state-in-setstate": "off",
     "react/jsx-no-target-blank": "off",
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "react/jsx-props-no-spreading": "off",
+    "prefer-destructuring": "off",
     "linebreak-style": "off",
     "global-require": "off",
     "arrow-body-style": "off",
