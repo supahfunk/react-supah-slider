@@ -32,3 +32,18 @@ h1:not(:first-child) {
 .slider-infinite-vertical {
   margin-bottom: 100px;
 }
+
+.github-ribbon {
+  position: absolute;
+  z-index: 10;
+  right: -61px;
+  top: 28px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  padding: 3px 30px;
+  text-align: center;
+  width: 200px;
+  transform: rotate(45deg);
+  font-size: 11px;
+}
