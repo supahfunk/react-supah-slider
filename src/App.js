@@ -35,14 +35,15 @@ const items = [
 const App = () => {
   return (
     <div className="App">
-      <h1>Slider Infinite</h1>
-      <SliderInfinite
-        className="slider-infinite"
-        items={items}
-      />
       <h1>Slider</h1>
       <Slider
         className="slider"
+        items={items}
+      />
+
+      <h1>Slider Infinite</h1>
+      <SliderInfinite
+        className="slider-infinite"
         items={items}
       />
 

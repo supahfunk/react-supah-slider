@@ -24,3 +24,7 @@ h1 {
 h1:not(:first-child) {
   margin-top: 90px;
 }
+
+.slider-infinite {
+  margin-bottom: 100px;
+}
