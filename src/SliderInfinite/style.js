@@ -13,7 +13,9 @@ const style = () => {
       },
     },
     slider: {
-      display: 'inline-flex',
+      position: 'relative',
+      zIndex: 1,
+      height: 300,
     },
     isDragging: {
       '& *': {
@@ -25,11 +27,11 @@ const style = () => {
     Slide
     ------------------------------*/
     slide: {
+      position: 'absolute',
+      zIndex: 1,
       width: '30vw',
       height: 300,
       padding: 20,
-      '--skew': 'calc(var(--speed) * .01deg)',
-      transform: 'skewX(var(--skew))',
       '& button': {
         width: '100%',
         height: '100%',
@@ -38,14 +40,17 @@ const style = () => {
         background: 'none',
         position: 'relative',
         zIndex: 1,
+        display: 'block',
         overflow: 'hidden',
+        '--skew': 'calc(var(--speed) * .1deg)',
+        transform: 'skewX(var(--skew))',
       },
       '& img': {
         width: '100%',
         height: '100%',
         objectFit: 'cover',
-        '--scale': 'calc(1 + var(--speed-abs) * 0.001)',
-        '--swipe': 'calc(var(--speed) * .1px)',
+        '--scale': 'calc(1 + var(--speed-abs) * 0.01)',
+        '--swipe': 'calc(var(--speed) * 1px)',
         transform: 'scaleX(var(--scale)) translateX(var(--swipe))',
       },
 
@@ -56,6 +61,15 @@ const style = () => {
         left: 20,
         bottom: 20,
         margin: 0,
+        '& span': {
+          position: 'absolute',
+          zIndex: -1,
+          left: -20,
+          bottom: -30,
+          fontSize: 100,
+          lineHeight: 1,
+          opacity: 0.2,
+        },
       },
     },
 

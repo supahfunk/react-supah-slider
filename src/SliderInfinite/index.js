@@ -1,8 +1,10 @@
-import { useEffect, createRef, useRef, useMemo, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import classNames from 'classnames'
 import { createUseStyles } from 'react-jss'
 import useRaf from '@rooks/use-raf'
+import gsap from 'gsap'
 import { useGesture } from 'react-use-gesture'
+import { lerp } from '../Utils/index'
 import style from './style'
 
 const useStyles = createUseStyles(style)
@@ -13,22 +15,25 @@ const Slider = ({
 }) => {
   const classes = useStyles()
   const $root = useRef()
-  const $items = useMemo(() => Array.from({ length: items.length }).map(() => createRef()), [])
   const minLimit = useRef(0)
   const maxLimit = useRef(0)
-  const x = useRef(0)
   const startX = useRef(0)
+  const scrollX = useRef(0)
+  const oldX = useRef(0)
+  const actualX = useRef(0)
+  const speedX = useRef(0)
   const [isDragging, setIsDragging] = useState(false)
+  const [slides, setSlides] = useState([])
 
   /*------------------------------
   Gestures
   ------------------------------*/
   const bindGestures = useGesture({
     onDrag: ({ movement: [mx], last }) => {
-      x.current = startX.current + mx
+      scrollX.current = (startX.current + mx)
       setIsDragging(Math.abs(mx) > 10)
       if (last) {
-        startX.current = x.current
+        startX.current = scrollX.current
         setTimeout(() => { setIsDragging(false) }, 100)
       }
     },
@@ -38,15 +43,34 @@ const Slider = ({
   Handle Resize
   ------------------------------*/
   const handleResize = () => {
-    minLimit.current = $items[0].current.getBoundingClientRect().width
-    maxLimit.current = minLimit.current * (items.length - 1)
+    if (!slides.length) return
+    minLimit.current = slides[0].getBoundingClientRect().width
+    maxLimit.current = minLimit.current * items.length
+  }
+
+  /*--------------------
+  Dispose
+  --------------------*/
+  const dispose = (scroll) => {
+    gsap.set(slides, {
+      x: (i) => {
+        return i * minLimit.current + scroll
+      },
+      modifiers: {
+        x: (x) => {
+          const s = gsap.utils.wrap(-minLimit.current, maxLimit.current - minLimit.current, parseInt(x, 10))
+          return `${s}px`
+        },
+      },
+    })
   }
 
   /*------------------------------
   Init
   ------------------------------*/
   useEffect(() => {
-    handleResize()
+    setSlides(document.querySelectorAll(`.${classes.slide}`))
+    window.addEventListener('resize', handleResize, false)
 
     return () => {
       window.removeEventListener('resize', handleResize, false)
@@ -54,12 +78,25 @@ const Slider = ({
   }, [])
 
   /*------------------------------
+  Slides Ready
+  ------------------------------*/
+  useEffect(() => {
+    handleResize()
+  }, [slides])
+
+  /*------------------------------
   RAF
   ------------------------------*/
   useRaf(() => {
-    const actualX = x.current % (-minLimit.current + (minLimit.current * 3))
+    if (!slides.length) return
+    actualX.current = lerp(actualX.current, scrollX.current, 0.1)
+    dispose(actualX.current)
+    speedX.current = actualX.current - oldX.current
+    oldX.current = actualX.current
 
-    $items[0].current.style.transform = `translateX(${actualX}px)`
+    // CSS Vars
+    $root.current.style.setProperty('--speed', speedX.current)
+    $root.current.style.setProperty('--speed-abs', Math.abs(speedX.current))
   }, true)
 
   /*------------------------------
@@ -70,13 +107,16 @@ const Slider = ({
       <div
         className={classes.slide}
         key={index.toString()}
-        ref={$items[index]}
       >
         <button
           onClick={() => { if (!isDragging) window.console.log('slide:', index) }}
         >
           <img src={item.image} alt={item.title} />
-          <h2>{item.title}</h2>
+          <h2>
+            <span>{index + 1}</span>
+            {' '}
+            {item.title}
+          </h2>
         </button>
       </div>
     ))
@@ -99,8 +139,6 @@ const Slider = ({
       >
         {renderSlides()}
       </div>
-
-      <div className={classes.progress} />
     </div>
   )
 }
