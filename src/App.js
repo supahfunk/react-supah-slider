@@ -1,4 +1,5 @@
 import Slider from './Slider/index'
+import SliderInfinite from './SliderInfinite/index'
 import './styles.css'
 
 /*------------------------------
@@ -32,20 +33,19 @@ const items = [
 ]
 
 const App = () => {
-  /*------------------------------
-  Render Slider
-  ------------------------------*/
-  const renderSlider = () => {
-    return (
+  return (
+    <div className="App">
+      <h1>Slider Infinite</h1>
+      <SliderInfinite
+        className="slider-infinite"
+        items={items}
+      />
+      <h1>Slider</h1>
       <Slider
         className="slider"
         items={items}
       />
-    )
-  }
-  return (
-    <div className="App">
-      {renderSlider()}
+
     </div>
   )
 }

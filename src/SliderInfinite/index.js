@@ -1,9 +1,8 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, createRef, useRef, useMemo, useState } from 'react'
 import classNames from 'classnames'
 import { createUseStyles } from 'react-jss'
-import { useGesture } from 'react-use-gesture'
 import useRaf from '@rooks/use-raf'
-import { lerp, clamp } from '../Utils/index'
+import { useGesture } from 'react-use-gesture'
 import style from './style'
 
 const useStyles = createUseStyles(style)
@@ -11,30 +10,27 @@ const useStyles = createUseStyles(style)
 const Slider = ({
   className,
   items,
-  soap = 2,
 }) => {
   const classes = useStyles()
   const $root = useRef()
-  const $slider = useRef()
-  const viewport = useRef(0)
-  const maxDistance = useRef(0)
+  const $items = useMemo(() => Array.from({ length: items.length }).map(() => createRef()), [])
+  const minLimit = useRef(0)
+  const maxLimit = useRef(0)
   const x = useRef(0)
-  const actualX = useRef(0)
-  const newX = useRef(0)
-  const speed = useRef(0)
-  const progress = useRef(0)
+  const startX = useRef(0)
   const [isDragging, setIsDragging] = useState(false)
 
   /*------------------------------
   Gestures
   ------------------------------*/
   const bindGestures = useGesture({
-    onDrag: ({ movement: [mx], first, last }) => {
-      x.current = -mx
-      if (first) actualX.current = newX.current
-
+    onDrag: ({ movement: [mx], last }) => {
+      x.current = startX.current + mx
       setIsDragging(Math.abs(mx) > 10)
-      if (last) setTimeout(() => { setIsDragging(false) }, 100)
+      if (last) {
+        startX.current = x.current
+        setTimeout(() => { setIsDragging(false) }, 100)
+      }
     },
   })
 
@@ -42,8 +38,8 @@ const Slider = ({
   Handle Resize
   ------------------------------*/
   const handleResize = () => {
-    viewport.current = $root.current.getBoundingClientRect().width
-    maxDistance.current = $slider.current.getBoundingClientRect().width - viewport.current
+    minLimit.current = $items[0].current.getBoundingClientRect().width
+    maxLimit.current = minLimit.current * (items.length - 1)
   }
 
   /*------------------------------
@@ -51,7 +47,6 @@ const Slider = ({
   ------------------------------*/
   useEffect(() => {
     handleResize()
-    window.addEventListener('resize', handleResize, false)
 
     return () => {
       window.removeEventListener('resize', handleResize, false)
@@ -62,17 +57,9 @@ const Slider = ({
   RAF
   ------------------------------*/
   useRaf(() => {
-    const lerpX = clamp(actualX.current - x.current * soap, -maxDistance.current, 0)
-    newX.current = lerp(newX.current, lerpX, 0.08)
-    speed.current = (newX.current - lerpX).toFixed(2)
-    progress.current = (-newX.current / maxDistance.current).toFixed(3)
+    const actualX = x.current % (-minLimit.current + (minLimit.current * 3))
 
-    $slider.current.style.transform = `translateX(${newX.current}px)`
-
-    // CSS Vars
-    $root.current.style.setProperty('--speed', speed.current)
-    $root.current.style.setProperty('--speed-abs', Math.abs(speed.current))
-    $root.current.style.setProperty('--progress', progress.current)
+    $items[0].current.style.transform = `translateX(${actualX}px)`
   }, true)
 
   /*------------------------------
@@ -83,6 +70,7 @@ const Slider = ({
       <div
         className={classes.slide}
         key={index.toString()}
+        ref={$items[index]}
       >
         <button
           onClick={() => { if (!isDragging) window.console.log('slide:', index) }}
@@ -108,7 +96,6 @@ const Slider = ({
         className={classNames({
           [classes.slider]: true,
         })}
-        ref={$slider}
       >
         {renderSlides()}
       </div>

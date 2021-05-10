@@ -11,6 +11,7 @@
   "dependencies": {
     "@rooks/use-raf": "^4.11.2",
     "classnames": "^2.3.1",
+    "gsap": "^3.6.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-jss": "^10.1.1",
@@ -52,6 +53,7 @@
     "lint": "eslint ./src/**/**.js",
     "lint:fix": "npm run lint -- --fix"
   },
+  "homepage": ".",
   "browserslist": [
     ">0.2%",
     "not dead",
