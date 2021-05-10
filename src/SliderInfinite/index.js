@@ -13,6 +13,7 @@ const SliderInfinite = ({
   className,
   items,
   soap = 2,
+  soapWheel = 1,
   wheel = true,
 }) => {
   const classes = useStyles()
@@ -41,13 +42,15 @@ const SliderInfinite = ({
     },
     onWheel: ({ movement: [_, my], last, event }) => {
       if (!wheel) return
-      scrollX.current = startX.current - my * soap
+      scrollX.current = startX.current - my * soapWheel
+
       setIsDragging(Math.abs(my) > 10)
       if (last) {
         startX.current = scrollX.current
         setTimeout(() => { setIsDragging(false) }, 100)
       }
-      event.preventDefault()
+
+      if (!last) event.preventDefault()
     },
   }, { domTarget: $root, eventOptions: { passive: false } })
 
@@ -81,8 +84,7 @@ const SliderInfinite = ({
   Init
   ------------------------------*/
   useEffect(() => {
-    setSlides(document.querySelectorAll(`.${classes.slide}`))
-    window.addEventListener('resize', handleResize, false)
+    setSlides($root.current.querySelectorAll(`.${classes.slide}`))
 
     return () => {
       window.removeEventListener('resize', handleResize, false)
@@ -94,6 +96,7 @@ const SliderInfinite = ({
   ------------------------------*/
   useEffect(() => {
     handleResize()
+    window.addEventListener('resize', handleResize, false)
   }, [slides])
 
   /*------------------------------

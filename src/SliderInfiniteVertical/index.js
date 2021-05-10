@@ -14,6 +14,7 @@ const SliderInfiniteVertical = ({
   className,
   items,
   soap = 2,
+  soapWheel = 1,
   wheel = true,
 }) => {
   const classes = useStyles()
@@ -42,24 +43,17 @@ const SliderInfiniteVertical = ({
     },
     onWheel: ({ movement: [_, my], last, event }) => {
       if (!wheel) return
-      scrollY.current = startY.current + my * soap
+      scrollY.current = startY.current + my * soapWheel
+
       setIsDragging(Math.abs(my) > 10)
       if (last) {
         startY.current = scrollY.current
         setTimeout(() => { setIsDragging(false) }, 100)
       }
-      event.preventDefault()
+
+      if (!last) event.preventDefault()
     },
   }, { domTarget: $root, eventOptions: { passive: false } })
-
-  /*------------------------------
-  Handle Resize
-  ------------------------------*/
-  const handleResize = () => {
-    if (!slides.length) return
-    minLimit.current = slides[0].getBoundingClientRect().height
-    maxLimit.current = minLimit.current * items.length
-  }
 
   /*--------------------
   Dispose
@@ -79,11 +73,19 @@ const SliderInfiniteVertical = ({
   }
 
   /*------------------------------
+  Handle Resize
+  ------------------------------*/
+  const handleResize = () => {
+    if (!slides.length) return
+    minLimit.current = slides[0].getBoundingClientRect().height
+    maxLimit.current = minLimit.current * items.length
+  }
+
+  /*------------------------------
   Init
   ------------------------------*/
   useEffect(() => {
-    setSlides(document.querySelectorAll(`.${classes.slide}`))
-    window.addEventListener('resize', handleResize, false)
+    setSlides($root.current.querySelectorAll(`.${classes.slide}`))
 
     return () => {
       window.removeEventListener('resize', handleResize, false)
@@ -95,6 +97,7 @@ const SliderInfiniteVertical = ({
   ------------------------------*/
   useEffect(() => {
     handleResize()
+    window.addEventListener('resize', handleResize, false)
   }, [slides])
 
   /*------------------------------

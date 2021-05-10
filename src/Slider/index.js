@@ -12,6 +12,7 @@ const Slider = ({
   className,
   items,
   soap = 2,
+  soapWheel = 1,
   wheel = true,
 }) => {
   const classes = useStyles()
@@ -31,7 +32,7 @@ const Slider = ({
   ------------------------------*/
   useGesture({
     onDrag: ({ movement: [mx], first, last }) => {
-      x.current = -mx
+      x.current = -mx * soap
       if (first) actualX.current = newX.current
 
       setIsDragging(Math.abs(mx) > 10)
@@ -39,11 +40,13 @@ const Slider = ({
     },
     onWheel: ({ movement: [_, my], first, last, event }) => {
       if (!wheel) return
-      x.current = -my
+      x.current = my * soapWheel
       if (first) actualX.current = newX.current
+
       setIsDragging(Math.abs(my) > 10)
       if (last) setTimeout(() => { setIsDragging(false) }, 100)
-      event.preventDefault()
+
+      if (!last) event.preventDefault()
     },
   }, { domTarget: $root, eventOptions: { passive: false } })
 
@@ -71,7 +74,7 @@ const Slider = ({
   RAF
   ------------------------------*/
   useRaf(() => {
-    const lerpX = clamp(actualX.current - x.current * soap, -maxDistance.current, 0)
+    const lerpX = clamp(actualX.current - x.current, -maxDistance.current, 0)
     newX.current = lerp(newX.current, lerpX, 0.08)
     speed.current = (newX.current - lerpX).toFixed(2)
     progress.current = (-newX.current / maxDistance.current).toFixed(3)
