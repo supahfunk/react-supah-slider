@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState, useRef } from 'react'
 import classNames from 'classnames'
 import { createUseStyles } from 'react-jss'
@@ -9,7 +10,7 @@ import style from './style'
 
 const useStyles = createUseStyles(style)
 
-const SliderInfinite = ({
+const SliderInfiniteVertical = ({
   className,
   items,
   soap = 2,
@@ -18,11 +19,11 @@ const SliderInfinite = ({
   const $root = useRef()
   const minLimit = useRef(0)
   const maxLimit = useRef(0)
-  const startX = useRef(0)
-  const scrollX = useRef(0)
-  const oldX = useRef(0)
-  const actualX = useRef(0)
-  const speedX = useRef(0)
+  const startY = useRef(0)
+  const scrollY = useRef(0)
+  const oldY = useRef(0)
+  const actualY = useRef(0)
+  const speedY = useRef(0)
   const [isDragging, setIsDragging] = useState(false)
   const [slides, setSlides] = useState([])
 
@@ -30,11 +31,11 @@ const SliderInfinite = ({
   Gestures
   ------------------------------*/
   const bindGestures = useGesture({
-    onDrag: ({ movement: [mx], last }) => {
-      scrollX.current = startX.current + mx * soap
-      setIsDragging(Math.abs(mx) > 10)
+    onDrag: ({ movement: [_, my], last }) => {
+      scrollY.current = startY.current + my * soap
+      setIsDragging(Math.abs(my) > 10)
       if (last) {
-        startX.current = scrollX.current
+        startY.current = scrollY.current
         setTimeout(() => { setIsDragging(false) }, 100)
       }
     },
@@ -45,7 +46,7 @@ const SliderInfinite = ({
   ------------------------------*/
   const handleResize = () => {
     if (!slides.length) return
-    minLimit.current = slides[0].getBoundingClientRect().width
+    minLimit.current = slides[0].getBoundingClientRect().height
     maxLimit.current = minLimit.current * items.length
   }
 
@@ -54,12 +55,12 @@ const SliderInfinite = ({
   --------------------*/
   const dispose = (scroll) => {
     gsap.set(slides, {
-      x: (i) => {
+      y: (i) => {
         return i * minLimit.current + scroll
       },
       modifiers: {
-        x: (x) => {
-          const s = gsap.utils.wrap(-minLimit.current, maxLimit.current - minLimit.current, parseInt(x, 10))
+        y: (y) => {
+          const s = gsap.utils.wrap(-minLimit.current, maxLimit.current - minLimit.current, parseInt(y, 10))
           return `${s}px`
         },
       },
@@ -90,14 +91,14 @@ const SliderInfinite = ({
   ------------------------------*/
   useRaf(() => {
     if (!slides.length) return
-    actualX.current = lerp(actualX.current, scrollX.current, 0.1)
-    dispose(actualX.current)
-    speedX.current = actualX.current - oldX.current
-    oldX.current = actualX.current
+    actualY.current = lerp(actualY.current, scrollY.current, 0.1)
+    dispose(actualY.current)
+    speedY.current = actualY.current - oldY.current
+    oldY.current = actualY.current
 
     // CSS Vars
-    $root.current.style.setProperty('--speed', speedX.current)
-    $root.current.style.setProperty('--speed-abs', Math.abs(speedX.current))
+    $root.current.style.setProperty('--speed', speedY.current)
+    $root.current.style.setProperty('--speed-abs', Math.abs(speedY.current))
   }, true)
 
   /*------------------------------
@@ -144,4 +145,4 @@ const SliderInfinite = ({
   )
 }
 
-export default SliderInfinite
+export default SliderInfiniteVertical

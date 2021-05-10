@@ -28,3 +28,7 @@ h1:not(:first-child) {
 .slider-infinite {
   margin-bottom: 100px;
 }
+
+.slider-infinite-vertical {
+  margin-bottom: 100px;
+}

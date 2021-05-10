@@ -1,5 +1,6 @@
 import Slider from './Slider/index'
 import SliderInfinite from './SliderInfinite/index'
+import SliderInfiniteVertical from './SliderInfiniteVertical/index'
 import './styles.css'
 
 /*------------------------------
@@ -44,6 +45,12 @@ const App = () => {
       <h1>Slider Infinite</h1>
       <SliderInfinite
         className="slider-infinite"
+        items={items}
+      />
+
+      <h1>Slider Infinite Vertical</h1>
+      <SliderInfiniteVertical
+        className="slider-infinite-vertical"
         items={items}
       />
 
