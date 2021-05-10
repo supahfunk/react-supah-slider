@@ -15,6 +15,7 @@ body {
   color: #333;
   font-family: sans-serif;
   font-size: 14px;
+  overflow-x: hidden;
 }
 
 h1 {
@@ -31,6 +32,11 @@ h1:not(:first-child) {
 
 .slider-infinite-vertical {
   margin-bottom: 100px;
+  width: 80vw;
+}
+
+.slider-infinite-vertical > div {
+  max-height: 80vh;
 }
 
 .github-ribbon {

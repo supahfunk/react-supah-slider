@@ -89,8 +89,9 @@ const style = () => {
   ------------------------------*/
   output['@media (max-width: 768px)'] = {
     slide: {
-      width: '50vw',
+      width: '70vw',
       height: 300,
+      padding: 20,
     },
   }
 

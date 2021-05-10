@@ -29,7 +29,7 @@ const style = () => {
     slide: {
       position: 'absolute',
       zIndex: 1,
-      width: '100vw',
+      width: '100%',
       height: 300,
       padding: 20,
       '& button': {
@@ -72,42 +72,7 @@ const style = () => {
         },
       },
     },
-
-    /*------------------------------
-    Progress
-    ------------------------------*/
-    progress: {
-      position: 'absolute',
-      zIndex: 1,
-      bottom: 0,
-      left: 20,
-      width: 'calc(100vw - 40px)',
-      height: 2,
-      background: 'rgba(0, 0, 0, .1)',
-      '&:before': {
-        content: '""',
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        background: 'rgba(0, 0, 0, 1)',
-        transformOrigin: '0 0',
-        transform: 'scaleX(var(--progress))',
-      },
-    },
   }
-
-  /*------------------------------
-  SM
-  ------------------------------*/
-  output['@media (max-width: 768px)'] = {
-    slide: {
-      width: '50vw',
-      height: 300,
-    },
-  }
-
   return output
 }
 
