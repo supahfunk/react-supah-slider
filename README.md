@@ -1,4 +1,7 @@
-# React Supah Slider
+# React Supah Slider 🛹
 
-Progress bar & infinite
-https://www.supah.it/react-supah-slider/
+- Slider with progress bar
+- Slider infinite horizontal
+- Slider infinite vertical
+
+Demo: https://www.supah.it/react-supah-slider/
