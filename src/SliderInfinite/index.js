@@ -13,6 +13,7 @@ const SliderInfinite = ({
   className,
   items,
   soap = 2,
+  wheel = true,
 }) => {
   const classes = useStyles()
   const $root = useRef()
@@ -29,7 +30,7 @@ const SliderInfinite = ({
   /*------------------------------
   Gestures
   ------------------------------*/
-  const bindGestures = useGesture({
+  useGesture({
     onDrag: ({ movement: [mx], last }) => {
       scrollX.current = startX.current + mx * soap
       setIsDragging(Math.abs(mx) > 10)
@@ -38,7 +39,17 @@ const SliderInfinite = ({
         setTimeout(() => { setIsDragging(false) }, 100)
       }
     },
-  })
+    onWheel: ({ movement: [_, my], last, event }) => {
+      if (!wheel) return
+      scrollX.current = startX.current - my * soap
+      setIsDragging(Math.abs(my) > 10)
+      if (last) {
+        startX.current = scrollX.current
+        setTimeout(() => { setIsDragging(false) }, 100)
+      }
+      event.preventDefault()
+    },
+  }, { domTarget: $root, eventOptions: { passive: false } })
 
   /*------------------------------
   Handle Resize
@@ -131,7 +142,6 @@ const SliderInfinite = ({
         [classes.isDragging]: isDragging,
       })}
       ref={$root}
-      {...bindGestures()}
     >
       <div
         className={classNames({

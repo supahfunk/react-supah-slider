@@ -41,6 +41,7 @@
     "react/no-danger": "off",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
+    "no-unused-vars": "off",
     "jsx-a11y/anchor-is-valid": [ "error", {
         "components": [ "Link" ],
         "specialLink": [ "to", "hrefLeft", "hrefRight" ],

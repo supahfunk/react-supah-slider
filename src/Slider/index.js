@@ -12,6 +12,7 @@ const Slider = ({
   className,
   items,
   soap = 2,
+  wheel = true,
 }) => {
   const classes = useStyles()
   const $root = useRef()
@@ -28,7 +29,7 @@ const Slider = ({
   /*------------------------------
   Gestures
   ------------------------------*/
-  const bindGestures = useGesture({
+  useGesture({
     onDrag: ({ movement: [mx], first, last }) => {
       x.current = -mx
       if (first) actualX.current = newX.current
@@ -36,7 +37,15 @@ const Slider = ({
       setIsDragging(Math.abs(mx) > 10)
       if (last) setTimeout(() => { setIsDragging(false) }, 100)
     },
-  })
+    onWheel: ({ movement: [_, my], first, last, event }) => {
+      if (!wheel) return
+      x.current = -my
+      if (first) actualX.current = newX.current
+      setIsDragging(Math.abs(my) > 10)
+      if (last) setTimeout(() => { setIsDragging(false) }, 100)
+      event.preventDefault()
+    },
+  }, { domTarget: $root, eventOptions: { passive: false } })
 
   /*------------------------------
   Handle Resize
@@ -102,7 +111,6 @@ const Slider = ({
         [classes.isDragging]: isDragging,
       })}
       ref={$root}
-      {...bindGestures()}
     >
       <div
         className={classNames({
