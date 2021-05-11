@@ -4,4 +4,4 @@
 - Slider infinite horizontal
 - Slider infinite vertical
 
-Demo: https://www.supah.it/react-supah-slider/
+Demo: https://supahfunk.github.io/react-supah-slider/
