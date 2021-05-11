@@ -31,7 +31,6 @@ h1:not(:first-child) {
 }
 
 .slider-infinite-vertical {
-  margin-bottom: 100px;
   width: 80vw;
 }
 
@@ -42,14 +41,29 @@ h1:not(:first-child) {
 .github-ribbon {
   position: absolute;
   z-index: 10;
-  right: -61px;
-  top: 28px;
-  background: #000;
-  color: #fff;
+  right: 0;
+  top: 0;
+  font-size: 0;
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
   text-decoration: none;
-  padding: 3px 30px;
+  pointer-events: none;
+}
+
+.github-ribbon:before {
+  content: attr(data-text);
+  font-size: 10px;
+  color: #fff;
   text-align: center;
-  width: 200px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+  background: black;
+  padding: 3px 30px;
+  position: absolute;
+  top: 35px;
+  right: -35px;
   transform: rotate(45deg);
-  font-size: 11px;
+  pointer-events: all;
 }

@@ -4,7 +4,7 @@ const style = () => {
       position: 'relative',
       zIndex: 1,
       overflow: 'hidden',
-      touchAction: 'none',
+      touchAction: 'pan-x',
       paddingBottom: 20,
       '& *': {
         cursor: 'grab',
